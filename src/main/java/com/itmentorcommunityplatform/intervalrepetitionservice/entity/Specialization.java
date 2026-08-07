@@ -17,12 +17,10 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table("specializations")
 public class Specialization {
 
-
         @Id
         private Long id;
 
         private String name;
-
 
         public Specialization(String name) {
                 this.name = name;

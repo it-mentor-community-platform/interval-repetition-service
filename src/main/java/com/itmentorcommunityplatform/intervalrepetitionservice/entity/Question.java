@@ -27,7 +27,6 @@ public class Question {
 
     private boolean enabled;
 
-
     public Question(Long categoryId, String title, String answer, boolean enabled) {
         this.categoryId = categoryId;
         this.title = title;

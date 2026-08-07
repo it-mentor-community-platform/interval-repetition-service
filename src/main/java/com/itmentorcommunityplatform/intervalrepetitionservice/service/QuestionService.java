@@ -11,32 +11,30 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class QuestionService {
 
-    private final SpecializationRepository sRepository;
-    private final CategoriesRepository cRepository;
-    private final QuestionRepository qRepository;
+    private final SpecializationRepository specializationRepository;
+    private final CategoriesRepository categoriesRepository;
+    private final QuestionRepository questionRepository;
 
     @Transactional
     public void save(QuestionRequestDto q) {
 
-        Specialization spec = sRepository
+        Specialization spec = specializationRepository
                 .findByName(q.specialization())
-                .orElseGet(() -> sRepository.save(
+                .orElseGet(() -> specializationRepository.save(
                         new Specialization(q.specialization()))
                 );
 
-        Category category = cRepository
+        Category category = categoriesRepository
                 .findByNameAndSpecializationId(q.category(), spec.getId())
-                .orElseGet(() -> cRepository.save(
-                        new Category(spec.getId(), q.category())))
-                ;
+                .orElseGet(() -> categoriesRepository.save(
+                        new Category(spec.getId(), q.category()))
+                );
 
-        Question finalQ = qRepository
+        Question finalQ = questionRepository
                 .findByTitle(q.title())
                 .map(question -> {
                     question.setAnswer(q.answer());
@@ -49,7 +47,7 @@ public class QuestionService {
                         true
                 ));
 
-        qRepository.save(finalQ);
+        questionRepository.save(finalQ);
 
     }
 

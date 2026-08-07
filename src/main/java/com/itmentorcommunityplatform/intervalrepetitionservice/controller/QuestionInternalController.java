@@ -4,7 +4,7 @@ package com.itmentorcommunityplatform.intervalrepetitionservice.controller;
 import com.itmentorcommunityplatform.intervalrepetitionservice.docs.QuestionInternalDocs;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.QuestionRequestDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.service.QuestionService;
-import com.itmentorcommunityplatform.intervalrepetitionservice.validator.QuestionRequestValidator;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,9 +23,8 @@ public class QuestionInternalController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     @QuestionInternalDocs
-    public void save(@RequestBody QuestionRequestDto question) {
+    public void save(@Valid @RequestBody QuestionRequestDto question) {
 
-        QuestionRequestValidator.validate(question);
         questionService.save(question);
 
     }

@@ -23,7 +23,6 @@ public class Category {
 
     private String name;
 
-
     public Category(Long specializationId, String name) {
         this.specializationId = specializationId;
         this.name = name;
