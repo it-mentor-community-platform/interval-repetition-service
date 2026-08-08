@@ -4,7 +4,7 @@ spring:
       on-profile: local-stack
 
   datasource:
-    url: jdbc:postgresql://database:5432/it_mentor_community_platform
+    url: jdbc:postgresql://database:5432/it_mentor_community_platform?currentSchema=interval_repetition_service
     username: ${POSTGRES_USERNAME:root}
     password: ${POSTGRES_PASSWORD:password}
 
