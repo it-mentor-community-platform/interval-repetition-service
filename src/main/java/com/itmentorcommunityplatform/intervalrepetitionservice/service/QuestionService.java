@@ -22,30 +22,14 @@ public class QuestionService {
     @Transactional
     public void save(QuestionRequestDto q) {
 
-        Specialization spec = specializationRepository
-                .findByName(q.specialization())
-                .orElseGet(() -> specializationRepository.save(
-                        new Specialization(q.specialization()))
-                );
+        Specialization spec = specializationRepository.findByName(q.specialization()).orElseGet(() -> specializationRepository.save(new Specialization(q.specialization())));
 
-        Category category = categoriesRepository
-                .findByNameAndSpecializationId(q.category(), spec.getId())
-                .orElseGet(() -> categoriesRepository.save(
-                        new Category(spec.getId(), q.category()))
-                );
+        Category category = categoriesRepository.findByNameAndSpecializationId(q.category(), spec.getId()).orElseGet(() -> categoriesRepository.save(new Category(spec.getId(), q.category())));
 
-        Question finalQ = questionRepository
-                .findByTitle(q.title())
-                .map(question -> {
-                    question.setAnswer(q.answer());
-                    return question;
-                })
-                .orElseGet(() -> new Question(
-                        category.getId(),
-                        q.title(),
-                        q.answer(),
-                        true
-                ));
+        Question finalQ = questionRepository.findByTitle(q.title()).map(question -> {
+            question.setAnswer(q.answer());
+            return question;
+        }).orElseGet(() -> new Question(category.getId(), q.title(), q.answer(), true));
 
         questionRepository.save(finalQ);
 
