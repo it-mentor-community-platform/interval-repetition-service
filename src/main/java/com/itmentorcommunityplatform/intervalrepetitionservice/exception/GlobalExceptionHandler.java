@@ -1,5 +1,6 @@
 package com.itmentorcommunityplatform.intervalrepetitionservice.exception;
 
+import com.itmentorcommunityplatform.intervalrepetitionservice.dto.ErrorDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,19 +10,26 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<Void> handleValidation(ValidationException e) {
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity<ErrorDto> handleValidation(ValidationException e) {
+        return ResponseEntity
+                .badRequest()
+                .body(new ErrorDto(e.getMessage()));
+
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Void> handleValidation(MethodArgumentNotValidException e) {
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity<ErrorDto> handleValidation(MethodArgumentNotValidException e) {
+        return ResponseEntity
+                .badRequest()
+                .body(new ErrorDto(e.getMessage()));
     }
 
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Void> handleUnknown(Exception e) {
-        return ResponseEntity.internalServerError().build();
+    public ResponseEntity<ErrorDto> handleUnknown(Exception e) {
+        return ResponseEntity
+                .internalServerError()
+                .body(new ErrorDto(e.getMessage()));
     }
 
 }
