@@ -66,14 +66,36 @@ CREATE TABLE review_attempts
 );
 
 
-CREATE INDEX ix_user_question_schedule_user_id_next_review_at
-    ON user_question_schedules (user_id, next_review_at);
+CREATE TABLE user_category_selections
+(
+    id          BIGSERIAL PRIMARY KEY,
+    user_id     BIGINT  NOT NULL,
+    category_id BIGINT  NOT NULL,
+
+    CONSTRAINT fk_user_category_selections_category
+        FOREIGN KEY (category_id)
+            REFERENCES categories (id)
+            ON DELETE CASCADE
+);
+
+
+CREATE INDEX ix_categories_specialization_id
+    ON categories (specialization_id);
+
+CREATE UNIQUE INDEX ux_user_category_selections_user_id_category_id
+    ON user_category_selections (user_id, category_id);
+
+CREATE INDEX ix_user_category_selections_user_id
+    ON user_category_selections (user_id);
 
 CREATE INDEX ix_questions_category_id
     ON questions (category_id);
 
-CREATE INDEX ix_review_attempts_user_question_schedule_id
-    ON review_attempts (user_question_schedule_id);
-
 CREATE UNIQUE INDEX ux_user_question_schedule_user_id_question_id
     ON user_question_schedules (user_id, question_id);
+
+CREATE INDEX ix_user_question_schedule_user_id_next_review_at
+    ON user_question_schedules (user_id, next_review_at);
+
+CREATE INDEX ix_review_attempts_user_question_schedule_id
+    ON review_attempts (user_question_schedule_id);
