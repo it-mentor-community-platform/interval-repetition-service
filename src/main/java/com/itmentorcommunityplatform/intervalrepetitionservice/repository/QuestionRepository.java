@@ -17,7 +17,7 @@ public interface QuestionRepository extends CrudRepository<Question, Long> {
           AND q.enabled = true
           AND NOT EXISTS (
               SELECT 1
-              FROM user_question_schedule uqs
+                      FROM user_question_schedules uqs
               WHERE uqs.question_id = q.id
                 AND uqs.user_id = :userId
           )
@@ -27,7 +27,7 @@ public interface QuestionRepository extends CrudRepository<Question, Long> {
     @Query("""
         SELECT COUNT(*)
         FROM questions q
-        JOIN user_question_schedule uqs
+                JOIN user_question_schedules uqs
           ON uqs.question_id = q.id
         WHERE q.category_id = :categoryId
           AND q.enabled = true
