@@ -9,8 +9,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
 
-    @Mapping(target = "newQuestions", source = "statistics.newQuestions")
-    @Mapping(target = "questionsReadyToRepeat", source = "statistics.questionsReadyToRepeat")
-    @Mapping(target = "allQuestions", source = "statistics.allQuestions")
+    @Mapping(target = "new_questions", source = "statistics.newQuestions")
+    @Mapping(target = "questions_ready_to_repeat", source = "statistics.questionsReadyToRepeat")
+    @Mapping(target = "all_questions", source = "statistics.allQuestions")
     CategoryResponseDto toResponse(Category category, boolean selected, UserCategoryStatistics statistics);
 }
