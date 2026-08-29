@@ -1,5 +1,6 @@
 package com.itmentorcommunityplatform.intervalrepetitionservice.controller;
 
+import com.itmentorcommunityplatform.intervalrepetitionservice.docs.GetSpecializationsDocs;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SpecializationResponseDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.service.SpecializationService;
 import com.itmentorcommunityplatform.intervalrepetitionservice.validator.HeaderValidator;
@@ -20,6 +21,7 @@ public class SpecializationController {
     private final SpecializationService specializationService;
 
     @GetMapping
+    @GetSpecializationsDocs
     public ResponseEntity<List<SpecializationResponseDto>> getSpecializations(@RequestHeader(value = "X-Telegram-User-Id", required = false) Long userId) {
 
         HeaderValidator.validateIdHeader(userId);
