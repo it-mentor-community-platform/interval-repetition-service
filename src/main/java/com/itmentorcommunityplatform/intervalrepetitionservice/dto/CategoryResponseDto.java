@@ -8,11 +8,11 @@ public record CategoryResponseDto(
 
         Boolean selected,
 
-        Integer newQuestions,
+        Integer new_questions,
 
-        Integer questionsReadyToRepeat,
+        Integer questions_ready_to_repeat,
 
-        Integer allQuestions
+        Integer all_questions
 
 ) {
 }
