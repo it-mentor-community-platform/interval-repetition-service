@@ -42,17 +42,17 @@ import java.lang.annotation.Target;
                                     "id": 10,
                                     "name": "Java Core",
                                     "selected": true,
-                                    "newQuestions": 15,
-                                    "questionsReadyToRepeat": 5,
-                                    "allQuestions": 30
+                                    "new_questions": 15,
+                                    "questions_ready_to_repeat": 5,
+                                    "all_questions": 30
                                   },
                                   {
                                     "id": 11,
                                     "name": "Collections",
                                     "selected": false,
-                                    "newQuestions": 8,
-                                    "questionsReadyToRepeat": 2,
-                                    "allQuestions": 20
+                                    "new_questions": 8,
+                                    "questions_ready_to_repeat": 10,
+                                    "all_questions": 25
                                   }
                                 ]
                               }
@@ -82,9 +82,9 @@ import java.lang.annotation.Target;
                                                         "id": 10,
                                                         "name": "Java Core",
                                                         "selected": true,
-                                                        "newQuestions": 15,
-                                                        "questionsReadyToRepeat": 5,
-                                                        "allQuestions": 30
+                                                        "new_questions": 15,
+                                                        "questions_ready_to_repeat": 5,
+                                                        "all_questions": 30
                                                     }
                                                 ]
                                             }
