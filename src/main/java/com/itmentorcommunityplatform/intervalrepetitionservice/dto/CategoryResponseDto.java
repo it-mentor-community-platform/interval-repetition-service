@@ -1,5 +1,7 @@
 package com.itmentorcommunityplatform.intervalrepetitionservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public record CategoryResponseDto(
 
         Long id,
@@ -8,11 +10,14 @@ public record CategoryResponseDto(
 
         Boolean selected,
 
-        Integer new_questions,
+        @JsonProperty("new_questions")
+        Integer newQuestions,
 
-        Integer questions_ready_to_repeat,
+        @JsonProperty("questions_ready_to_repeat")
+        Integer questionsReadyToRepeat,
 
-        Integer all_questions
+        @JsonProperty("all_questions")
+        Integer allQuestions
 
 ) {
 }
