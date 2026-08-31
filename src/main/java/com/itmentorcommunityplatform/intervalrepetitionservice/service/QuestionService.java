@@ -6,7 +6,7 @@ import com.itmentorcommunityplatform.intervalrepetitionservice.entity.Category;
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.Question;
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.Specialization;
 import com.itmentorcommunityplatform.intervalrepetitionservice.mapper.QuestionInternalResponseMapper;
-import com.itmentorcommunityplatform.intervalrepetitionservice.repository.CategoriesRepository;
+import com.itmentorcommunityplatform.intervalrepetitionservice.repository.CategoryRepository;
 import com.itmentorcommunityplatform.intervalrepetitionservice.repository.QuestionRepository;
 import com.itmentorcommunityplatform.intervalrepetitionservice.repository.SpecializationRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class QuestionService {
 
     private final SpecializationRepository specializationRepository;
-    private final CategoriesRepository categoriesRepository;
+    private final CategoryRepository categoryRepository;
     private final QuestionRepository questionRepository;
 
     private final QuestionInternalResponseMapper mapper;
@@ -32,10 +32,10 @@ public class QuestionService {
                         new Specialization(question.specialization()))
                 );
 
-        Category category = categoriesRepository
+        Category category = categoryRepository
                 .findByNameAndSpecializationId(question.category(),
                         spec.getId())
-                .orElseGet(() -> categoriesRepository.save(
+                .orElseGet(() -> categoryRepository.save(
                         new Category(spec.getId(), question.category()))
                 );
 
