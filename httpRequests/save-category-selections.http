@@ -1,0 +1,36 @@
+### Успех - 201 Created
+POST http://localhost:8088/api/interval-repetition/selected-categories
+Content-Type: application/json
+X-Telegram-User-Id: 4342423432
+
+{
+  "categoryIds": [1, 2, 3]
+}
+
+
+### Ошибка валидации - 400 Bad Request
+POST http://localhost:8088/api/interval-repetition/selected-categories
+Content-Type: application/json
+X-Telegram-User-Id:
+
+{
+  "categoryIds": []
+}
+
+### Категория не найдена - 404 Not Found
+POST http://localhost:8088/api/interval-repetition/selected-categories
+Content-Type: application/json
+X-Telegram-User-Id: 4342423432
+
+{
+  "categoryIds": [100, 101, 102]
+}
+
+### Категория уже добавлена - 409 Conflict
+POST http://localhost:8088/api/interval-repetition/selected-categories
+Content-Type: application/json
+X-Telegram-User-Id: 4342423432
+
+{
+  "categoryIds": [1, 2, 3]
+}

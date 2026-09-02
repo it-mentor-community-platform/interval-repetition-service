@@ -24,4 +24,8 @@ public class UserCategorySelection {
 
     private Long userId;
 
+    public UserCategorySelection(Long categoryId, Long userId) {
+        this.categoryId = categoryId;
+        this.userId = userId;
+    }
 }
