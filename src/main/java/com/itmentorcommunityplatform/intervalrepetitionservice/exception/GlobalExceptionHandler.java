@@ -3,9 +3,11 @@ package com.itmentorcommunityplatform.intervalrepetitionservice.exception;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.ErrorDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -22,8 +24,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDto> handleValidation(MethodArgumentNotValidException e) {
 
         String message = e.getBindingResult()
-                .getFieldError()
-                .getDefaultMessage();
+                .getAllErrors()
+                .stream()
+                .findFirst()
+                .map(ObjectError::getDefaultMessage)
+                .orElse("Validation failed");
 
         return ResponseEntity
                 .badRequest()
