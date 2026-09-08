@@ -1,26 +1,28 @@
 package com.itmentorcommunityplatform.intervalrepetitionservice.service;
 
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.CategoryResponseDto;
-import com.itmentorcommunityplatform.intervalrepetitionservice.entity.Category;
+import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SavedSelectedCategoryResponseDto;
+import com.itmentorcommunityplatform.intervalrepetitionservice.entity.CategoryWithSpecializationName;
+import com.itmentorcommunityplatform.intervalrepetitionservice.entity.UserCategorySelection;
+import com.itmentorcommunityplatform.intervalrepetitionservice.exception.ResourceAlreadyExistsException;
+import com.itmentorcommunityplatform.intervalrepetitionservice.exception.ResourceNotFoundException;
 import com.itmentorcommunityplatform.intervalrepetitionservice.mapper.CategoryMapper;
-import com.itmentorcommunityplatform.intervalrepetitionservice.model.UserCategoryStatistics;
+import com.itmentorcommunityplatform.intervalrepetitionservice.model.CategoryWithStatistics;
 import com.itmentorcommunityplatform.intervalrepetitionservice.repository.CategoryRepository;
-import com.itmentorcommunityplatform.intervalrepetitionservice.repository.QuestionRepository;
 import com.itmentorcommunityplatform.intervalrepetitionservice.repository.UserCategorySelectionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.relational.core.conversion.DbActionExecutionException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-
-import java.time.Instant;
 import java.util.List;
-import java.util.Set;
 
 
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
 
-    private final QuestionRepository questionRepository;
     private final CategoryRepository categoryRepository;
     private final UserCategorySelectionRepository selectionRepository;
 
@@ -29,29 +31,49 @@ public class CategoryService {
 
     public List<CategoryResponseDto> getAllCategoriesBySpecialization(Long userId, Long specializationId) {
 
-        List<Category> categories = (List<Category>) categoryRepository.findBySpecializationId(specializationId);
+        List<CategoryWithStatistics> categories = categoryRepository.findCategoriesWithStatisticBySpecializationId(specializationId, userId);
 
-        Set<Long> selectedCategoryIds = selectionRepository.findCategoryIdsByUserId(userId);
+        return categoryMapper.toResponseList(categories);
 
-        return categories.stream()
-                .map(category -> categoryMapper.toResponse(
-                        category,
-                        selectedCategoryIds.contains(category.getId()),
-                        getUserCategoryStatistics(userId, category.getId())
-                ))
+    }
+
+    @Transactional
+    public List<SavedSelectedCategoryResponseDto> saveCategorySelection(Long userId, List<Long> selectedCategoryIds){
+
+        List<CategoryWithSpecializationName> categories = categoryRepository.findAllCategoriesWithSpecializationName();
+
+        List<Long> categoriesIds = categories.stream()
+                .map(CategoryWithSpecializationName::getId)
                 .toList();
 
+        for (Long selectedCategoryId : selectedCategoryIds) {
+            if (!categoriesIds.contains(selectedCategoryId)) {
+                throw new ResourceNotFoundException("Category with id " + selectedCategoryId + " not found!");
+            }
+        }
+
+        List<CategoryWithSpecializationName> selectedCategories = categories.stream()
+                .filter(category -> selectedCategoryIds.contains(category.getId()))
+                .toList();
+
+        List<UserCategorySelection> categorySelections = selectedCategoryIds.stream()
+                .map(id -> new UserCategorySelection(id, userId))
+                .toList();
+
+        try {
+            selectionRepository.saveAll(categorySelections);
+        } catch (DbActionExecutionException e) {
+            if (e.getCause() instanceof DataIntegrityViolationException) {
+                throw new ResourceAlreadyExistsException(
+                        "One or more categories are already selected"
+                );
+            }
+
+            throw e;
+        }
+
+        return categoryMapper.toSelectedCategoryResponseList(selectedCategories);
     }
 
-
-    private UserCategoryStatistics getUserCategoryStatistics(Long userId, Long categoryId){
-
-        return new UserCategoryStatistics(
-                questionRepository.countNewByCategoryId(categoryId, userId),
-                questionRepository.countReadyForRepetitionByCategoryId(categoryId, userId, Instant.now().toEpochMilli()),
-                questionRepository.countAllByCategoryId(categoryId)
-        );
-
-    }
 
 }
