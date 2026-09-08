@@ -6,7 +6,6 @@ import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SavedSelected
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SelectedCategoriesRequestDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SelectedCategoryResponseDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.service.CategoryService;
-import com.itmentorcommunityplatform.intervalrepetitionservice.validator.HeaderValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +30,8 @@ public class SelectedCategoriesController{
     @PostMapping
     @SaveSelectedCategoriesDocs
     public ResponseEntity<List<SavedSelectedCategoryResponseDto>> saveSelectedCategories(
-            @RequestHeader(value = "X-Telegram-User-Id", required = false) Long userId,
+            @RequestHeader(value = "X-Telegram-User-Id") Long userId,
             @Valid @RequestBody SelectedCategoriesRequestDto categories) throws URISyntaxException {
-
-        HeaderValidator.validateIdHeader(userId);
 
         return ResponseEntity
                 .created(new URI(""))
@@ -44,9 +41,7 @@ public class SelectedCategoriesController{
 
     @GetMapping
     @GetSelectedCategoriesDocs
-    public ResponseEntity<List<SelectedCategoryResponseDto>> getSelectedCategories(@RequestHeader(value = "X-Telegram-User-Id", required = false) Long userId) {
-
-        HeaderValidator.validateIdHeader(userId);
+    public ResponseEntity<List<SelectedCategoryResponseDto>> getSelectedCategories(@RequestHeader(value = "X-Telegram-User-Id") Long userId) {
 
         return ResponseEntity.ok(categoryService.getSelectedCategories(userId));
     }
