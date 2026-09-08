@@ -1,6 +1,13 @@
 package com.itmentorcommunityplatform.intervalrepetitionservice.model;
 
-public record UserCategoryStatistics(
+public record CategoryWithStatistics(
+        Long id,
+
+        String name,
+
+        Long specializationId,
+
+        Boolean selected,
 
         Integer newQuestions,
 

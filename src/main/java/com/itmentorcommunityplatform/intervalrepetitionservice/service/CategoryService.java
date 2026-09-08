@@ -2,15 +2,13 @@ package com.itmentorcommunityplatform.intervalrepetitionservice.service;
 
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.CategoryResponseDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SavedSelectedCategoryResponseDto;
-import com.itmentorcommunityplatform.intervalrepetitionservice.entity.Category;
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.CategoryWithSpecializationName;
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.UserCategorySelection;
 import com.itmentorcommunityplatform.intervalrepetitionservice.exception.ResourceAlreadyExistsException;
 import com.itmentorcommunityplatform.intervalrepetitionservice.exception.ResourceNotFoundException;
 import com.itmentorcommunityplatform.intervalrepetitionservice.mapper.CategoryMapper;
-import com.itmentorcommunityplatform.intervalrepetitionservice.model.UserCategoryStatistics;
+import com.itmentorcommunityplatform.intervalrepetitionservice.model.CategoryWithStatistics;
 import com.itmentorcommunityplatform.intervalrepetitionservice.repository.CategoryRepository;
-import com.itmentorcommunityplatform.intervalrepetitionservice.repository.QuestionRepository;
 import com.itmentorcommunityplatform.intervalrepetitionservice.repository.UserCategorySelectionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,7 +16,6 @@ import org.springframework.data.relational.core.conversion.DbActionExecutionExce
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.List;
 
 
@@ -26,7 +23,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryService {
 
-    private final QuestionRepository questionRepository;
     private final CategoryRepository categoryRepository;
     private final UserCategorySelectionRepository selectionRepository;
 
@@ -35,16 +31,10 @@ public class CategoryService {
 
     public List<CategoryResponseDto> getAllCategoriesBySpecialization(Long userId, Long specializationId) {
 
-        List<Category> categories = categoryRepository.findBySpecializationId(specializationId);
-
-        List<Long> selectedCategoryIds = selectionRepository.findCategoryIdsByUserId(userId);
+        List<CategoryWithStatistics> categories = categoryRepository.findCategoriesWithStatisticBySpecializationId(specializationId, userId);
 
         return categories.stream()
-                .map(category -> categoryMapper.toResponse(
-                        category,
-                        selectedCategoryIds.contains(category.getId()),
-                        getUserCategoryStatistics(userId, category.getId())
-                ))
+                .map(categoryMapper::toResponse)
                 .toList();
 
     }
@@ -88,14 +78,5 @@ public class CategoryService {
 
     }
 
-    private UserCategoryStatistics getUserCategoryStatistics(Long userId, Long categoryId){
-
-        return new UserCategoryStatistics(
-                questionRepository.countNewByCategoryId(categoryId, userId),
-                questionRepository.countReadyForRepetitionByCategoryId(categoryId, userId, Instant.now().toEpochMilli()),
-                questionRepository.countAllByCategoryId(categoryId)
-        );
-
-    }
 
 }
