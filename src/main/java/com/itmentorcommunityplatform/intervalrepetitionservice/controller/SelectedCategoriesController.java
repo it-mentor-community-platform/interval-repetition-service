@@ -30,7 +30,7 @@ public class SelectedCategoriesController{
     @PostMapping
     @SaveSelectedCategoriesDocs
     public ResponseEntity<List<SavedSelectedCategoryResponseDto>> saveSelectedCategories(
-            @RequestHeader(value = "X-Telegram-User-Id") Long userId,
+            @RequestHeader("X-Telegram-User-Id") Long userId,
             @Valid @RequestBody SelectedCategoriesRequestDto categories) throws URISyntaxException {
 
         return ResponseEntity
@@ -41,7 +41,7 @@ public class SelectedCategoriesController{
 
     @GetMapping
     @GetSelectedCategoriesDocs
-    public ResponseEntity<List<SelectedCategoryResponseDto>> getSelectedCategories(@RequestHeader(value = "X-Telegram-User-Id") Long userId) {
+    public ResponseEntity<List<SelectedCategoryResponseDto>> getSelectedCategories(@RequestHeader("X-Telegram-User-Id") Long userId) {
 
         return ResponseEntity.ok(categoryService.getSelectedCategories(userId));
     }
