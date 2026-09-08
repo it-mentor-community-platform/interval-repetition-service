@@ -1,4 +1,4 @@
-### 1. Успешный импорт вопросов (200 ok)
+### 1. Успешный импорт вопроса (200 ok)
 POST http://localhost:8088/api/interval-repetition/internal/question
 Content-Type: application/json
 
@@ -10,8 +10,7 @@ Content-Type: application/json
   "answer": "Сильная ссылка..."
 }
 
-### 2. Успешный импорт вопросов (200 ok)
-#Перезапись вопроса
+### 2. Успешная перезапись вопроса (200 ok)
 POST http://localhost:8088/api/interval-repetition/internal/question
 Content-Type: application/json
 
@@ -23,7 +22,7 @@ Content-Type: application/json
   "answer": "Другой ответ"
 }
 
-### 3. Неуспешный импорт вопросов (400 Bad Request )
+### 3. Неуспешный импорт вопроса (400 Bad Request )
 # Отсутсвует поле
 POST http://localhost:8088/api/interval-repetition/internal/question
 Content-Type: application/json
@@ -36,14 +35,14 @@ Content-Type: application/json
 
 }
 
-### 3. Неизвестная ошибка (500 InternalServerError )
-# Отсутсвует поле
+### 4. Неизвестная ошибка (500 InternalServerError )
 POST http://localhost:8088/api/interval-repetition/internal/question
 Content-Type: application/json
-
 
 {
   "specialization": "Java",
   "category": "Java Core",
-  "title": "Какие типы ссылок существуют в Java?"
+  "title": "Какие типы ссылок существуют в Java?",
+  "answer": "Сильная ссылка...",
+  ""
 }
