@@ -7,5 +7,5 @@ DELETE http://localhost:8088/api/interval-repetition/selected-categories/1
 Content-Type: application/json
 
 ### Категория не найдена - 404 Not Found
-DELETE http://localhost:8088/api/interval-repetition/selected-categories/19
+DELETE http://localhost:8088/api/interval-repetition/selected-categories/195
 X-Telegram-User-Id: 4342423432
