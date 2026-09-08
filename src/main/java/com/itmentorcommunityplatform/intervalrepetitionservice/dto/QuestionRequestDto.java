@@ -4,16 +4,16 @@ import jakarta.validation.constraints.NotBlank;
 
 public record QuestionRequestDto(
 
-        @NotBlank
+        @NotBlank(message = "Specialization must not be blank")
         String specialization,
 
-        @NotBlank
+        @NotBlank(message = "Category must not be blank")
         String category,
 
-        @NotBlank
+        @NotBlank(message = "Title must not be blank")
         String title,
 
-        @NotBlank
+        @NotBlank(message = "Answer must not be blank")
         String answer
 ) {
 }
