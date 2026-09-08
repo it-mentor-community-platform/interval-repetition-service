@@ -33,9 +33,7 @@ public class CategoryService {
 
         List<CategoryWithStatistics> categories = categoryRepository.findCategoriesWithStatisticBySpecializationId(specializationId, userId);
 
-        return categories.stream()
-                .map(categoryMapper::toResponse)
-                .toList();
+        return categoryMapper.toResponseList(categories);
 
     }
 
@@ -74,9 +72,7 @@ public class CategoryService {
             throw e;
         }
 
-        return selectedCategories.stream()
-                .map(categoryMapper::toSelectedCategoryResponse)
-                .toList();
+        return categoryMapper.toSelectedCategoryResponseList(selectedCategories);
     }
 
 
