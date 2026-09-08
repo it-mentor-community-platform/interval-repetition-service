@@ -83,5 +83,17 @@ public class CategoryService {
         return categoryMapper.toSavedSelectedCategoryResponseList(selectedCategories);
     }
 
+    public void deleteSelectedCategory(Long userId, Long categoryId) {
+
+        checkIfCategoryExists(categoryId);
+
+        selectionRepository.deleteByUserIdAndCategoryId(userId, categoryId);
+
+    }
+
+    private void checkIfCategoryExists(Long categoryId) {
+        categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category with id " + categoryId + " not found!"));
+    }
+
 
 }

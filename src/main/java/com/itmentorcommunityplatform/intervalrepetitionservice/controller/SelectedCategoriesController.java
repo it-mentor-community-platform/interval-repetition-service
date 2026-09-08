@@ -1,5 +1,6 @@
 package com.itmentorcommunityplatform.intervalrepetitionservice.controller;
 
+import com.itmentorcommunityplatform.intervalrepetitionservice.docs.DeleteSelectedCategoryDocs;
 import com.itmentorcommunityplatform.intervalrepetitionservice.docs.GetSelectedCategoriesDocs;
 import com.itmentorcommunityplatform.intervalrepetitionservice.docs.SaveSelectedCategoriesDocs;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SavedSelectedCategoryResponseDto;
@@ -9,7 +10,9 @@ import com.itmentorcommunityplatform.intervalrepetitionservice.service.CategoryS
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -44,6 +47,16 @@ public class SelectedCategoriesController{
     public ResponseEntity<List<SelectedCategoryResponseDto>> getSelectedCategories(@RequestHeader("X-Telegram-User-Id") Long userId) {
 
         return ResponseEntity.ok(categoryService.getSelectedCategories(userId));
+    }
+
+    @DeleteMapping("/{categoryId}")
+    @DeleteSelectedCategoryDocs
+    public ResponseEntity<Void> deleteSelectedCategory(@RequestHeader("X-Telegram-User-Id") Long userId, @PathVariable Long categoryId) {
+
+        categoryService.deleteSelectedCategory(userId, categoryId);
+
+        return ResponseEntity.noContent().build();
+
     }
 
 }
