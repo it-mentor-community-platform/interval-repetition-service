@@ -14,6 +14,6 @@ public interface CategoryMapper {
 
     @Mapping(target = "id", source = "category.id")
     @Mapping(target = "name", source = "category.name")
-    @Mapping(target = "specialization", source = "specializationName")
-    SavedSelectedCategoryResponseDto toSelectedCategoryResponse(CategoryWithSpecializationName category, String specializationName);
+    @Mapping(target = "specialization", source = "category.specializationName")
+    SavedSelectedCategoryResponseDto toSelectedCategoryResponse(CategoryWithSpecializationName category);
 }

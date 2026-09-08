@@ -42,11 +42,24 @@ public class CategoryService {
     @Transactional
     public List<SavedSelectedCategoryResponseDto> saveCategorySelection(Long userId, List<Long> selectedCategoryIds){
 
+        List<CategoryWithSpecializationName> categories = categoryRepository.findAllCategoriesWithSpecializationName();
+
+        List<Long> categoriesIds = categories.stream()
+                .map(CategoryWithSpecializationName::getId)
+                .toList();
+
+        for (Long selectedCategoryId : selectedCategoryIds) {
+            if (!categoriesIds.contains(selectedCategoryId)) {
+                throw new ResourceNotFoundException("Category with id " + selectedCategoryId + " not found!");
+            }
+        }
+
+        List<CategoryWithSpecializationName> selectedCategories = categories.stream()
+                .filter(category -> selectedCategoryIds.contains(category.getId()))
+                .toList();
+
         List<UserCategorySelection> categorySelections = selectedCategoryIds.stream()
                 .map(id -> new UserCategorySelection(id, userId))
-                .toList();
-        List<CategoryWithSpecializationName> categories = selectedCategoryIds.stream()
-                .map(this::getCategoryWithSpecializationNameById)
                 .toList();
 
         try {
@@ -61,21 +74,9 @@ public class CategoryService {
             throw e;
         }
 
-        return categories.stream()
-                .map(category -> categoryMapper.toSelectedCategoryResponse(
-                        category,
-                        category.getSpecializationName()
-                ))
+        return selectedCategories.stream()
+                .map(categoryMapper::toSelectedCategoryResponse)
                 .toList();
-    }
-
-
-    public CategoryWithSpecializationName getCategoryWithSpecializationNameById(Long categoryId) {
-
-        return categoryRepository.
-                findCategoryWithSpecializationNameById(categoryId).
-                orElseThrow(() -> new ResourceNotFoundException("Category with id " + categoryId + " not found!"));
-
     }
 
 

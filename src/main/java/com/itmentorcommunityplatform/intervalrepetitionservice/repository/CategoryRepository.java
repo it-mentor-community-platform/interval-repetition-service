@@ -4,12 +4,12 @@ import com.itmentorcommunityplatform.intervalrepetitionservice.entity.Category;
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.CategoryWithSpecializationName;
 import com.itmentorcommunityplatform.intervalrepetitionservice.model.CategoryWithStatistics;
 import org.springframework.data.jdbc.repository.query.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.ListCrudRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface CategoryRepository extends CrudRepository<Category, Long> {
+public interface CategoryRepository extends ListCrudRepository<Category, Long> {
 
     Optional<Category> findByNameAndSpecializationId(String name, Long specializationId);
 
@@ -42,8 +42,7 @@ public interface CategoryRepository extends CrudRepository<Category, Long> {
                  SELECT c.id, s.name AS specialization_name, c.name
                  FROM categories c
                  JOIN specializations s ON s.id = c.specialization_id
-                 WHERE c.id = :categoryId;
             """)
-    Optional<CategoryWithSpecializationName> findCategoryWithSpecializationNameById(Long categoryId);
+    List<CategoryWithSpecializationName> findAllCategoriesWithSpecializationName();
 
 }
