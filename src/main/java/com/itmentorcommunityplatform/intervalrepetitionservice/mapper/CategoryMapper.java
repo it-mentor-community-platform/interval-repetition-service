@@ -2,6 +2,7 @@ package com.itmentorcommunityplatform.intervalrepetitionservice.mapper;
 
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.CategoryResponseDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SavedSelectedCategoryResponseDto;
+import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SelectedCategoryResponseDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.CategoryWithSpecializationName;
 import com.itmentorcommunityplatform.intervalrepetitionservice.model.CategoryWithStatistics;
 import org.mapstruct.Mapper;
@@ -16,11 +17,18 @@ public interface CategoryMapper {
 
     List<CategoryResponseDto> toResponseList(List<CategoryWithStatistics> categories);
 
-    @Mapping(target = "id", source = "category.id")
-    @Mapping(target = "name", source = "category.name")
     @Mapping(target = "specialization", source = "category.specializationName")
-    SavedSelectedCategoryResponseDto toSelectedCategoryResponse(CategoryWithSpecializationName category);
+    SavedSelectedCategoryResponseDto toSavedSelectedCategoryResponse(CategoryWithSpecializationName category);
 
-    List<SavedSelectedCategoryResponseDto> toSelectedCategoryResponseList(
+    List<SavedSelectedCategoryResponseDto> toSavedSelectedCategoryResponseList(
             List<CategoryWithSpecializationName> categories);
+
+
+    @Mapping(target = "specialization", source = "category.specializationName")
+    SelectedCategoryResponseDto toSelectedCategoryResponse(CategoryWithStatistics category);
+
+
+    List<SelectedCategoryResponseDto> toSelectedCategoryResponseList(
+            List<CategoryWithStatistics> categories);
+
 }

@@ -2,6 +2,7 @@ package com.itmentorcommunityplatform.intervalrepetitionservice.service;
 
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.CategoryResponseDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SavedSelectedCategoryResponseDto;
+import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SelectedCategoryResponseDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.CategoryWithSpecializationName;
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.UserCategorySelection;
 import com.itmentorcommunityplatform.intervalrepetitionservice.exception.ResourceAlreadyExistsException;
@@ -35,6 +36,13 @@ public class CategoryService {
 
         return categoryMapper.toResponseList(categories);
 
+    }
+
+    public List<SelectedCategoryResponseDto> getSelectedCategories(Long userId) {
+
+        List<CategoryWithStatistics> selectedCategories = categoryRepository.findAllSelectedCategoriesWithStatistic(userId);
+
+        return categoryMapper.toSelectedCategoryResponseList(selectedCategories);
     }
 
     @Transactional
@@ -72,7 +80,7 @@ public class CategoryService {
             throw e;
         }
 
-        return categoryMapper.toSelectedCategoryResponseList(selectedCategories);
+        return categoryMapper.toSavedSelectedCategoryResponseList(selectedCategories);
     }
 
 

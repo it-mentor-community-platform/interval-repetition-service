@@ -5,7 +5,7 @@ public record CategoryWithStatistics(
 
         String name,
 
-        Long specializationId,
+        String specializationName,
 
         Boolean selected,
 
