@@ -8,6 +8,7 @@ import com.itmentorcommunityplatform.intervalrepetitionservice.entity.UserCatego
 import com.itmentorcommunityplatform.intervalrepetitionservice.exception.ResourceAlreadyExistsException;
 import com.itmentorcommunityplatform.intervalrepetitionservice.exception.ResourceNotFoundException;
 import com.itmentorcommunityplatform.intervalrepetitionservice.mapper.CategoryMapper;
+import com.itmentorcommunityplatform.intervalrepetitionservice.mapper.SelectedCategoryMapper;
 import com.itmentorcommunityplatform.intervalrepetitionservice.model.CategoryWithStatistics;
 import com.itmentorcommunityplatform.intervalrepetitionservice.repository.CategoryRepository;
 import com.itmentorcommunityplatform.intervalrepetitionservice.repository.UserCategorySelectionRepository;
@@ -28,6 +29,7 @@ public class CategoryService {
     private final UserCategorySelectionRepository selectionRepository;
 
     private final CategoryMapper categoryMapper;
+    private final SelectedCategoryMapper selectedCategoryMapper;
 
 
     public List<CategoryResponseDto> getAllCategoriesBySpecialization(Long userId, Long specializationId) {
@@ -42,7 +44,7 @@ public class CategoryService {
 
         List<CategoryWithStatistics> selectedCategories = categoryRepository.findAllSelectedCategoriesWithStatistic(userId);
 
-        return categoryMapper.toSelectedCategoryResponseList(selectedCategories);
+        return selectedCategoryMapper.toSelectedCategoryResponseList(selectedCategories);
     }
 
     @Transactional
@@ -80,7 +82,19 @@ public class CategoryService {
             throw e;
         }
 
-        return categoryMapper.toSavedSelectedCategoryResponseList(selectedCategories);
+        return selectedCategoryMapper.toSavedSelectedCategoryResponseList(selectedCategories);
+    }
+
+    public void deleteSelectedCategory(Long userId, Long categoryId) {
+
+        checkIfCategoryExists(categoryId);
+
+        selectionRepository.deleteByUserIdAndCategoryId(userId, categoryId);
+
+    }
+
+    private void checkIfCategoryExists(Long categoryId) {
+        categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category with id " + categoryId + " not found!"));
     }
 
 

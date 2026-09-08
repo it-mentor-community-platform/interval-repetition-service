@@ -21,7 +21,7 @@ public class SpecializationController {
 
     @GetMapping
     @GetSpecializationsDocs
-    public ResponseEntity<List<SpecializationResponseDto>> getSpecializations(@RequestHeader(value = "X-Telegram-User-Id") Long userId) {
+    public ResponseEntity<List<SpecializationResponseDto>> getSpecializations(@RequestHeader("X-Telegram-User-Id") Long userId) {
 
         List<SpecializationResponseDto> specializations = specializationService.getAllSpecializations(userId);
 
