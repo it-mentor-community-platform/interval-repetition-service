@@ -13,24 +13,24 @@ public interface QuestionRepository extends CrudRepository<Question, Long> {
 
 
     @Query("""
-                        SELECT  q.id,
-                                q.category_id,
-                                q.title,
-                                q.answer,
-                                COUNT(*) OVER () - 1 AS questions_left
-        FROM questions q
-                                 JOIN user_category_selections ucs
-                                      ON ucs.category_id = q.category_id
-                                          AND ucs.user_id = :userId
-                                 LEFT JOIN user_question_schedules uqs
-                                           ON uqs.question_id = q.id
-                                               AND uqs.user_id = :userId
-                        WHERE (uqs.question_id IS NULL
-                            OR uqs.next_review_at <= EXTRACT(EPOCH FROM now()))
-                          AND q.enabled
-                        ORDER BY uqs.next_review_at NULLS FIRST
-                        LIMIT 1;
-    """)
+                SELECT  q.id,
+                        q.category_id,
+                        q.title,
+                        q.answer,
+                        COUNT(*) OVER () - 1 AS questions_left
+                FROM questions q
+                JOIN user_category_selections ucs
+                    ON ucs.category_id = q.category_id
+                        AND ucs.user_id = :userId
+                LEFT JOIN user_question_schedules uqs
+                        ON uqs.question_id = q.id
+                            AND uqs.user_id = :userId
+                WHERE (uqs.question_id IS NULL
+                        OR uqs.next_review_at <= EXTRACT(EPOCH FROM now()))
+                        AND q.enabled
+                ORDER BY uqs.next_review_at NULLS FIRST
+                LIMIT 1;
+            """)
     Optional<NextQuestion> getNextQuestionForRepetitionBySelectedCategories(Long userId);
 
 
