@@ -6,7 +6,6 @@ import com.itmentorcommunityplatform.intervalrepetitionservice.dto.QuestionReque
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.Category;
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.Question;
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.Specialization;
-import com.itmentorcommunityplatform.intervalrepetitionservice.exception.NoQuestionsLeftForRepetitionException;
 import com.itmentorcommunityplatform.intervalrepetitionservice.mapper.NextQuestionMapper;
 import com.itmentorcommunityplatform.intervalrepetitionservice.mapper.QuestionInternalResponseMapper;
 import com.itmentorcommunityplatform.intervalrepetitionservice.model.NextQuestion;
@@ -16,6 +15,8 @@ import com.itmentorcommunityplatform.intervalrepetitionservice.repository.Specia
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 
 @Service
@@ -64,13 +65,13 @@ public class QuestionService {
     }
 
 
-    public NextQuestionResponseDto getNextQuestionFromSelectedCategories(Long userId) {
+    public Optional<NextQuestionResponseDto> getNextQuestionFromSelectedCategories(Long userId) {
 
-        NextQuestion nextQuestion = questionRepository
-                .getNextQuestionForRepetitionBySelectedCategories(userId)
-                .orElseThrow(() -> new NoQuestionsLeftForRepetitionException("No new or ready for repetition questions!"));
+        Optional<NextQuestion> optionalNextQuestion =
+                questionRepository.getNextQuestionForRepetitionBySelectedCategories(userId);
 
-        return nextQuestionMapper.toResponse(nextQuestion);
+        return optionalNextQuestion
+                .map(nextQuestionMapper::toResponse);
 
     }
 

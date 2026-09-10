@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/interval-repetition/selected-categories")
@@ -66,7 +67,13 @@ public class SelectedCategoriesController{
     @GetMapping("/next-question")
     public ResponseEntity<NextQuestionResponseDto> getNextQuestionFromSelectedCategories(@RequestHeader("X-Telegram-User-Id") Long userId) {
 
-        return ResponseEntity.ok(questionService.getNextQuestionFromSelectedCategories(userId));
+        Optional<NextQuestionResponseDto> nextQuestion = questionService.getNextQuestionFromSelectedCategories(userId);
+
+        if (nextQuestion.isPresent()) {
+            return ResponseEntity.ok(nextQuestion.get());
+        } else {
+            return ResponseEntity.noContent().build();
+        }
 
     }
 
