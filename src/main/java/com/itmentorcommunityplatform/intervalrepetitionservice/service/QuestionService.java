@@ -1,17 +1,23 @@
 package com.itmentorcommunityplatform.intervalrepetitionservice.service;
 
+import com.itmentorcommunityplatform.intervalrepetitionservice.dto.NextQuestionResponseDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.QuestionInsertInternalResponseDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.QuestionRequestDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.Category;
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.Question;
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.Specialization;
+import com.itmentorcommunityplatform.intervalrepetitionservice.mapper.NextQuestionMapper;
 import com.itmentorcommunityplatform.intervalrepetitionservice.mapper.QuestionInternalResponseMapper;
+import com.itmentorcommunityplatform.intervalrepetitionservice.model.NextQuestion;
 import com.itmentorcommunityplatform.intervalrepetitionservice.repository.CategoryRepository;
 import com.itmentorcommunityplatform.intervalrepetitionservice.repository.QuestionRepository;
 import com.itmentorcommunityplatform.intervalrepetitionservice.repository.SpecializationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +28,7 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
 
     private final QuestionInternalResponseMapper mapper;
+    private final NextQuestionMapper nextQuestionMapper;
 
     @Transactional
     public QuestionInsertInternalResponseDto save(QuestionRequestDto question) {
@@ -55,6 +62,17 @@ public class QuestionService {
         questionRepository.save(finalQ);
 
         return mapper.map(finalQ, category, spec);
+    }
+
+
+    public Optional<NextQuestionResponseDto> getNextQuestionFromSelectedCategories(Long userId) {
+
+        Optional<NextQuestion> optionalNextQuestion =
+                questionRepository.getNextQuestionForRepetitionBySelectedCategories(userId);
+
+        return optionalNextQuestion
+                .map(nextQuestionMapper::toResponse);
+
     }
 
 

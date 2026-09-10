@@ -3,10 +3,12 @@ package com.itmentorcommunityplatform.intervalrepetitionservice.controller;
 import com.itmentorcommunityplatform.intervalrepetitionservice.docs.DeleteSelectedCategoryDocs;
 import com.itmentorcommunityplatform.intervalrepetitionservice.docs.GetSelectedCategoriesDocs;
 import com.itmentorcommunityplatform.intervalrepetitionservice.docs.SaveSelectedCategoriesDocs;
+import com.itmentorcommunityplatform.intervalrepetitionservice.dto.NextQuestionResponseDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SavedSelectedCategoryResponseDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SelectedCategoriesRequestDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SelectedCategoryResponseDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.service.CategoryService;
+import com.itmentorcommunityplatform.intervalrepetitionservice.service.QuestionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/interval-repetition/selected-categories")
@@ -29,6 +32,7 @@ import java.util.List;
 public class SelectedCategoriesController{
 
     private final CategoryService categoryService;
+    private final QuestionService questionService;
 
     @PostMapping
     @SaveSelectedCategoriesDocs
@@ -56,6 +60,20 @@ public class SelectedCategoriesController{
         categoryService.deleteSelectedCategory(userId, categoryId);
 
         return ResponseEntity.noContent().build();
+
+    }
+
+
+    @GetMapping("/next-question")
+    public ResponseEntity<NextQuestionResponseDto> getNextQuestionFromSelectedCategories(@RequestHeader("X-Telegram-User-Id") Long userId) {
+
+        Optional<NextQuestionResponseDto> nextQuestion = questionService.getNextQuestionFromSelectedCategories(userId);
+
+        if (nextQuestion.isPresent()) {
+            return ResponseEntity.ok(nextQuestion.get());
+        } else {
+            return ResponseEntity.noContent().build();
+        }
 
     }
 

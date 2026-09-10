@@ -1,0 +1,13 @@
+### Успех, есть вопрос - 200 OK
+GET http://localhost:8088/api/interval-repetition/selected-categories/next-question
+X-Telegram-User-Id: 4342423432
+
+
+### Успех, нет вопросов - 204 No Content
+GET http://localhost:8088/api/interval-repetition/selected-categories/next-question
+X-Telegram-User-Id: 4342423485
+
+### Отсутствует заголовок с user id - 400 Bad Request
+GET http://localhost:8088/api/interval-repetition/selected-categories/next-question
+Content-Type: application/json
+
