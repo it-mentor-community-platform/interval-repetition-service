@@ -68,4 +68,9 @@ public class GlobalExceptionHandler {
                 .body(new ErrorDto(e.getMessage()));
     }
 
+    @ExceptionHandler(NoQuestionsLeftForRepetitionException.class)
+    public ResponseEntity<Void> handleNoQuestionsLeft() {
+        return ResponseEntity.noContent().build();
+    }
+
 }
