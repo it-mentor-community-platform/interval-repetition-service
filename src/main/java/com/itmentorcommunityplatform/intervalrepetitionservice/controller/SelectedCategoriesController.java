@@ -1,6 +1,7 @@
 package com.itmentorcommunityplatform.intervalrepetitionservice.controller;
 
 import com.itmentorcommunityplatform.intervalrepetitionservice.docs.DeleteSelectedCategoryDocs;
+import com.itmentorcommunityplatform.intervalrepetitionservice.docs.GetNextQuestionFromCertainCategoryDocs;
 import com.itmentorcommunityplatform.intervalrepetitionservice.docs.GetSelectedCategoriesDocs;
 import com.itmentorcommunityplatform.intervalrepetitionservice.docs.SaveSelectedCategoriesDocs;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.NextQuestionResponseDto;
@@ -63,17 +64,12 @@ public class SelectedCategoriesController{
 
     }
 
-
     @GetMapping("/next-question")
     public ResponseEntity<NextQuestionResponseDto> getNextQuestionFromSelectedCategories(@RequestHeader("X-Telegram-User-Id") Long userId) {
 
         Optional<NextQuestionResponseDto> nextQuestion = questionService.getNextQuestionFromSelectedCategories(userId);
 
-        if (nextQuestion.isPresent()) {
-            return ResponseEntity.ok(nextQuestion.get());
-        } else {
-            return ResponseEntity.noContent().build();
-        }
+        return nextQuestion.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
 
     }
 

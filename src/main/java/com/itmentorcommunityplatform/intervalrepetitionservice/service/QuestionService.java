@@ -23,6 +23,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class QuestionService {
 
+    private final CategoryService categoryService;
+
     private final SpecializationRepository specializationRepository;
     private final CategoryRepository categoryRepository;
     private final QuestionRepository questionRepository;
@@ -69,6 +71,18 @@ public class QuestionService {
 
         Optional<NextQuestion> optionalNextQuestion =
                 questionRepository.getNextQuestionForRepetitionBySelectedCategories(userId);
+
+        return optionalNextQuestion
+                .map(nextQuestionMapper::toResponse);
+
+    }
+
+    public Optional<NextQuestionResponseDto> getNextQuestionFromCertainCategory(Long userId, Long categoryId) {
+
+        categoryService.checkIfCategoryExists(categoryId);
+
+        Optional<NextQuestion> optionalNextQuestion =
+                questionRepository.getNextQuestionForRepetitionByCategoryId(userId, categoryId);
 
         return optionalNextQuestion
                 .map(nextQuestionMapper::toResponse);
