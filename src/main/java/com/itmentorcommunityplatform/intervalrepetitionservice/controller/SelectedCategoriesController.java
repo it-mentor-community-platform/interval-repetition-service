@@ -1,6 +1,7 @@
 package com.itmentorcommunityplatform.intervalrepetitionservice.controller;
 
 import com.itmentorcommunityplatform.intervalrepetitionservice.docs.DeleteSelectedCategoryDocs;
+import com.itmentorcommunityplatform.intervalrepetitionservice.docs.GetNextQuestionFromCertainCategoryDocs;
 import com.itmentorcommunityplatform.intervalrepetitionservice.docs.GetSelectedCategoriesDocs;
 import com.itmentorcommunityplatform.intervalrepetitionservice.docs.SaveSelectedCategoriesDocs;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.NextQuestionResponseDto;
@@ -74,6 +75,7 @@ public class SelectedCategoriesController{
     }
 
     @GetMapping("/{categoryId}/next-question")
+    @GetNextQuestionFromCertainCategoryDocs
     public ResponseEntity<NextQuestionResponseDto> getNextQuestionFromCertainCategory(@RequestHeader("X-Telegram-User-Id") Long userId, @PathVariable Long categoryId) {
 
         Optional<NextQuestionResponseDto> nextQuestion = questionService.getNextQuestionFromCertainCategory(userId, categoryId);
