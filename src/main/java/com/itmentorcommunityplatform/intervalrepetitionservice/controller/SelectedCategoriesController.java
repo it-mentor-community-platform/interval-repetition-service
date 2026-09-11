@@ -64,7 +64,6 @@ public class SelectedCategoriesController{
 
     }
 
-
     @GetMapping("/next-question")
     public ResponseEntity<NextQuestionResponseDto> getNextQuestionFromSelectedCategories(@RequestHeader("X-Telegram-User-Id") Long userId) {
 
@@ -73,17 +72,5 @@ public class SelectedCategoriesController{
         return nextQuestion.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
 
     }
-
-    @GetMapping("/{categoryId}/next-question")
-    @GetNextQuestionFromCertainCategoryDocs
-    public ResponseEntity<NextQuestionResponseDto> getNextQuestionFromCertainCategory(@RequestHeader("X-Telegram-User-Id") Long userId, @PathVariable Long categoryId) {
-
-        Optional<NextQuestionResponseDto> nextQuestion = questionService.getNextQuestionFromCertainCategory(userId, categoryId);
-
-        return nextQuestion.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
-
-    }
-
-
 
 }

@@ -1,16 +1,16 @@
 ### Успех, есть вопрос(есть новые вопросы или вопросы, у которых наступила дата повторения) - 200 OK
-GET http://localhost:8088/api/interval-repetition/selected-categories/1/next-question
+GET http://localhost:8088/api/interval-repetition/categories/1/next-question
 X-Telegram-User-Id: 4342423432
 
 ### Успех, нет вопросов(для всех вопросов есть состояние, дата повторения ещё не наступила) - 204 No Content
-GET http://localhost:8088/api/interval-repetition/selected-categories/2/next-question
+GET http://localhost:8088/api/interval-repetition/categories/2/next-question
 X-Telegram-User-Id: 4342423456
 
 ### Ошибка валидации - 400 Bad Request
-GET http://localhost:8088/api/interval-repetition/selected-categories/1/next-question
+GET http://localhost:8088/api/interval-repetition/categories/1/next-question
 Content-Type: application/json
 
 ### Категория не найдена - 404 Not Found
-GET http://localhost:8088/api/interval-repetition/selected-categories/101/next-question
+GET http://localhost:8088/api/interval-repetition/categories/101/next-question
 Content-Type: application/json
 X-Telegram-User-Id: 4342423432
