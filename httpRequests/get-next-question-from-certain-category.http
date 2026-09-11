@@ -1,9 +1,9 @@
-### Успех, есть вопрос - 200 OK
+### Успех, есть вопрос(есть новые вопросы или вопросы, у которых наступила дата повторения) - 200 OK
 GET http://localhost:8088/api/interval-repetition/selected-categories/1/next-question
 X-Telegram-User-Id: 4342423432
 
-### Успех, нет вопросов - 204 No Content
-GET http://localhost:8088/api/interval-repetition/selected-categories/45/next-question
+### Успех, нет вопросов(для всех вопросов есть состояние, дата повторения ещё не наступила) - 204 No Content
+GET http://localhost:8088/api/interval-repetition/selected-categories/2/next-question
 X-Telegram-User-Id: 4342423456
 
 ### Ошибка валидации - 400 Bad Request
