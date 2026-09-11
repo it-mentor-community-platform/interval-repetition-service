@@ -69,12 +69,19 @@ public class SelectedCategoriesController{
 
         Optional<NextQuestionResponseDto> nextQuestion = questionService.getNextQuestionFromSelectedCategories(userId);
 
-        if (nextQuestion.isPresent()) {
-            return ResponseEntity.ok(nextQuestion.get());
-        } else {
-            return ResponseEntity.noContent().build();
-        }
+        return nextQuestion.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
 
     }
+
+    @GetMapping("/{categoryId}/next-question")
+    public ResponseEntity<NextQuestionResponseDto> getNextQuestionFromCertainCategory(@RequestHeader("X-Telegram-User-Id") Long userId, @PathVariable Long categoryId) {
+
+        Optional<NextQuestionResponseDto> nextQuestion = questionService.getNextQuestionFromCertainCategory(userId, categoryId);
+
+        return nextQuestion.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
+
+    }
+
+
 
 }

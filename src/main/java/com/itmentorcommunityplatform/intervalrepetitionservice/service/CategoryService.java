@@ -93,7 +93,7 @@ public class CategoryService {
 
     }
 
-    private void checkIfCategoryExists(Long categoryId) {
+    public void checkIfCategoryExists(Long categoryId) {
         categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category with id " + categoryId + " not found!"));
     }
 
