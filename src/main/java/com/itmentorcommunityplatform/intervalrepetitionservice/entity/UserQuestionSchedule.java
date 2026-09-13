@@ -32,4 +32,5 @@ public class UserQuestionSchedule {
     private Long nextReviewAt;
 
     private Long lastReviewAt;
+
 }
