@@ -23,32 +23,28 @@ public class ReviewAttemptService {
     private final QuestionService questionService;
 
     @Transactional
-    public void reviewAttempt(ReviewAttemptDto reviewAttempt, Long userId) {
+    public void saveReviewAttempt(ReviewAttemptDto reviewAttempt, Long userId) {
 
         questionService.checkIfExists(reviewAttempt.questionId());
 
         Optional<UserQuestionSchedule> scheduleOptional = userQuestionScheduleRepository.findUserQuestionScheduleByUserIdAndQuestionId(userId, reviewAttempt.questionId());
 
-        UserQuestionSchedule oldSchedule;
-        UserQuestionSchedule newSchedule;
+        UserQuestionSchedule oldSchedule = scheduleOptional
+                .orElseGet(() -> initiateUserQuestionSchedule(userId, reviewAttempt.questionId()));
 
-        oldSchedule = scheduleOptional.orElseGet(() -> initiateUserQuestionSchedule(userId, reviewAttempt.questionId()));
+        UserQuestionSchedule newSchedule = userQuestionScheduleRepository
+                .upsertUserQuestionSchedule(
+                        recalculateUserQuestionSchedule(oldSchedule, reviewAttempt.quality())
+                );
 
-        newSchedule = recalculateUserQuestionSchedule(oldSchedule, reviewAttempt.quality());
-
-        newSchedule = userQuestionScheduleRepository.upsertUserQuestionSchedule(newSchedule);
-
-        ReviewAttempt attempt = calculateReviewAttempt(oldSchedule, newSchedule, reviewAttempt.quality());
-
-        reviewAttemptRepository.save(attempt);
-
+        reviewAttemptRepository.save(buildReviewAttempt(oldSchedule, newSchedule, reviewAttempt.quality()));
 
     }
 
     private UserQuestionSchedule recalculateUserQuestionSchedule(UserQuestionSchedule oldSchedule, int quality) {
 
 
-        int successfulRepetitions = quality > 3 ? oldSchedule.getSuccessfulRepetitions() + 1 : 1;
+        int successfulRepetitions = quality > 3 ? oldSchedule.getSuccessfulRepetitions() + 1 : 0;
         double easeFactor = calculateEasyFactor(oldSchedule.getEaseFactor(), quality);
         int interval = calculateInterval(successfulRepetitions, easeFactor);
         long nextReviewAt = Instant.now().plus(Duration.ofDays(interval)).getEpochSecond();
@@ -77,7 +73,7 @@ public class ReviewAttemptService {
                 .build();
     }
 
-    private ReviewAttempt calculateReviewAttempt(UserQuestionSchedule oldSchedule, UserQuestionSchedule newSchedule, int quality) {
+    private ReviewAttempt buildReviewAttempt(UserQuestionSchedule oldSchedule, UserQuestionSchedule newSchedule, int quality) {
 
         return ReviewAttempt.builder()
                 .userQuestionScheduleId(newSchedule.getId())
@@ -90,16 +86,12 @@ public class ReviewAttemptService {
 
     private double calculateEasyFactor(double ef, int quality) {
         ef = ef + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
-        if (ef > 1.3) {
-            return ef;
-        } else {
-            return 1.3;
-        }
+        return Math.max(ef, 1.3);
     }
 
     private int calculateInterval(int repetitionsCount, double ef) {
         return switch (repetitionsCount) {
-            case 1 -> 1;
+            case 0, 1 -> 1;
             case 2 -> 6;
             default -> (int) Math.round(calculateInterval(repetitionsCount - 1, ef) * ef);
         };

@@ -10,8 +10,8 @@ public record ReviewAttemptDto(
         Long questionId,
 
         @NotNull(message = "Quality must not be null")
-        @Min(0)
-        @Max(5)
+        @Min(value = 0, message = "Quality must be at least 0")
+        @Max(value = 5, message = "Quality must be at max 5")
         Integer quality
 
 ) {
