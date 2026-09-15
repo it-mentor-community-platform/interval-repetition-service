@@ -33,4 +33,13 @@ public class UserQuestionSchedule {
 
     private Long lastReviewAt;
 
+
+    public UserQuestionSchedule(Long userId, Long questionId) {
+        this.userId = userId;
+        this.questionId = questionId;
+        this.successfulRepetitions = 0;
+        this.easeFactor = 2.5;
+        this.interval = 1;
+    }
+
 }

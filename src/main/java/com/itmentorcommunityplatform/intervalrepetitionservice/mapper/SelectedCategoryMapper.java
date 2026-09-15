@@ -3,7 +3,7 @@ package com.itmentorcommunityplatform.intervalrepetitionservice.mapper;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SavedSelectedCategoryResponseDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SelectedCategoryResponseDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.CategoryWithSpecializationName;
-import com.itmentorcommunityplatform.intervalrepetitionservice.model.CategoryWithStatistics;
+import com.itmentorcommunityplatform.intervalrepetitionservice.projection.CategoryWithStatistics;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

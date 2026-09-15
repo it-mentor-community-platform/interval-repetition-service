@@ -21,7 +21,7 @@ public class ReviewAttemptController {
 
     @PostMapping
     @ReviewAttemptDocs
-    public ResponseEntity<Void> reviewAttempt(@RequestHeader("X-Telegram-User-Id") Long userId, @Valid  @RequestBody ReviewAttemptDto reviewAttempt) {
+    public ResponseEntity<Void> saveReviewAttempt(@RequestHeader("X-Telegram-User-Id") Long userId, @Valid @RequestBody ReviewAttemptDto reviewAttempt) {
 
         reviewAttemptService.saveReviewAttempt(reviewAttempt, userId);
 

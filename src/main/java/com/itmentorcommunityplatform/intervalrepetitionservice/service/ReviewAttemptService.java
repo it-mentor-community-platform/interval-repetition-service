@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +31,7 @@ public class ReviewAttemptService {
         Optional<UserQuestionSchedule> scheduleOptional = userQuestionScheduleRepository.findUserQuestionScheduleByUserIdAndQuestionId(userId, reviewAttempt.questionId());
 
         UserQuestionSchedule oldSchedule = scheduleOptional
-                .orElseGet(() -> initiateUserQuestionSchedule(userId, reviewAttempt.questionId()));
+                .orElseGet(() -> new UserQuestionSchedule(userId, reviewAttempt.questionId()));
 
         UserQuestionSchedule newSchedule = userQuestionScheduleRepository
                 .upsertUserQuestionSchedule(
@@ -44,10 +45,13 @@ public class ReviewAttemptService {
     private UserQuestionSchedule recalculateUserQuestionSchedule(UserQuestionSchedule oldSchedule, int quality) {
 
 
-        int successfulRepetitions = quality > 3 ? oldSchedule.getSuccessfulRepetitions() + 1 : 0;
+        int successfulRepetitions = quality >= 3 ? oldSchedule.getSuccessfulRepetitions() + 1 : 0;
         double easeFactor = calculateEasyFactor(oldSchedule.getEaseFactor(), quality);
-        int interval = calculateInterval(successfulRepetitions, easeFactor);
-        long nextReviewAt = Instant.now().plus(Duration.ofDays(interval)).getEpochSecond();
+        int interval = calculateInterval(successfulRepetitions, oldSchedule.getEaseFactor());
+        long nextReviewAt = Instant.now()
+                .plus(Duration.ofDays(interval))
+                .plusSeconds(ThreadLocalRandom.current().nextLong(3600))
+                .getEpochSecond();
         long lastReviewAt = Instant.now().getEpochSecond();
 
 
@@ -59,17 +63,6 @@ public class ReviewAttemptService {
                 .interval(interval)
                 .nextReviewAt(nextReviewAt)
                 .lastReviewAt(lastReviewAt)
-                .build();
-    }
-
-    private UserQuestionSchedule initiateUserQuestionSchedule(Long userId, Long questionId) {
-
-        return UserQuestionSchedule.builder()
-                .userId(userId)
-                .questionId(questionId)
-                .successfulRepetitions(0)
-                .easeFactor(2.5)
-                .interval(1)
                 .build();
     }
 
