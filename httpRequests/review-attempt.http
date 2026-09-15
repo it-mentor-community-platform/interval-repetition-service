@@ -1,0 +1,29 @@
+### Успех - 200 OK
+POST http://localhost:8088/api/interval-repetition/review-attempt
+Content-Type: application/json
+X-Telegram-User-Id: 4342423432
+
+{
+  "questionId": 2,
+  "quality": 5
+}
+
+### Ошибка валидации - 400 Bad Request
+POST http://localhost:8088/api/interval-repetition/review-attempt
+Content-Type: application/json
+X-Telegram-User-Id:4342423432
+
+{
+  "questionId": 1,
+  "quality": 12
+}
+
+### Вопрос не найден - 404 Not Found
+POST http://localhost:8088/api/interval-repetition/review-attempt
+Content-Type: application/json
+X-Telegram-User-Id: 4342423432
+
+{
+  "questionId": 10000,
+  "quality": 4
+}

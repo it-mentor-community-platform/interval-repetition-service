@@ -1,7 +1,6 @@
 package com.itmentorcommunityplatform.intervalrepetitionservice.controller;
 
 import com.itmentorcommunityplatform.intervalrepetitionservice.docs.DeleteSelectedCategoryDocs;
-import com.itmentorcommunityplatform.intervalrepetitionservice.docs.GetNextQuestionFromCertainCategoryDocs;
 import com.itmentorcommunityplatform.intervalrepetitionservice.docs.GetSelectedCategoriesDocs;
 import com.itmentorcommunityplatform.intervalrepetitionservice.docs.SaveSelectedCategoriesDocs;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.NextQuestionResponseDto;

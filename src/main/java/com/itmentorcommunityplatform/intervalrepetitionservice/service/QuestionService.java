@@ -6,9 +6,10 @@ import com.itmentorcommunityplatform.intervalrepetitionservice.dto.QuestionReque
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.Category;
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.Question;
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.Specialization;
+import com.itmentorcommunityplatform.intervalrepetitionservice.exception.ResourceNotFoundException;
 import com.itmentorcommunityplatform.intervalrepetitionservice.mapper.NextQuestionMapper;
 import com.itmentorcommunityplatform.intervalrepetitionservice.mapper.QuestionInternalResponseMapper;
-import com.itmentorcommunityplatform.intervalrepetitionservice.model.NextQuestion;
+import com.itmentorcommunityplatform.intervalrepetitionservice.projection.NextQuestion;
 import com.itmentorcommunityplatform.intervalrepetitionservice.repository.CategoryRepository;
 import com.itmentorcommunityplatform.intervalrepetitionservice.repository.QuestionRepository;
 import com.itmentorcommunityplatform.intervalrepetitionservice.repository.SpecializationRepository;
@@ -87,6 +88,10 @@ public class QuestionService {
         return optionalNextQuestion
                 .map(nextQuestionMapper::toResponse);
 
+    }
+
+    public void checkIfExists(Long questionId){
+        questionRepository.findById(questionId).orElseThrow(() -> new ResourceNotFoundException("Question with id " + questionId + " not found!"));
     }
 
 

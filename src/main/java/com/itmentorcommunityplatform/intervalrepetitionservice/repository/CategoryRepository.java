@@ -2,7 +2,7 @@ package com.itmentorcommunityplatform.intervalrepetitionservice.repository;
 
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.Category;
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.CategoryWithSpecializationName;
-import com.itmentorcommunityplatform.intervalrepetitionservice.model.CategoryWithStatistics;
+import com.itmentorcommunityplatform.intervalrepetitionservice.projection.CategoryWithStatistics;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.ListCrudRepository;
 

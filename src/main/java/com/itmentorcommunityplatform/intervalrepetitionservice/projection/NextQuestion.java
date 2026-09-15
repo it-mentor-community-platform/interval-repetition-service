@@ -1,4 +1,4 @@
-package com.itmentorcommunityplatform.intervalrepetitionservice.model;
+package com.itmentorcommunityplatform.intervalrepetitionservice.projection;
 
 public record NextQuestion(
 

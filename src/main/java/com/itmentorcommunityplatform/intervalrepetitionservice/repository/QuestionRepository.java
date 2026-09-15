@@ -1,7 +1,7 @@
 package com.itmentorcommunityplatform.intervalrepetitionservice.repository;
 
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.Question;
-import com.itmentorcommunityplatform.intervalrepetitionservice.model.NextQuestion;
+import com.itmentorcommunityplatform.intervalrepetitionservice.projection.NextQuestion;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 

@@ -1,7 +1,7 @@
 package com.itmentorcommunityplatform.intervalrepetitionservice.mapper;
 
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.NextQuestionResponseDto;
-import com.itmentorcommunityplatform.intervalrepetitionservice.model.NextQuestion;
+import com.itmentorcommunityplatform.intervalrepetitionservice.projection.NextQuestion;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
