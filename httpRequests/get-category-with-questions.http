@@ -3,7 +3,8 @@ GET http://localhost:8088/api/interval-repetition/categories/4
 X-Telegram-User-Id: 4342423432
 
 ### Отсутствует заголовок с user id - 400 Bad Request
-GET http://localhost:8088/api/interval-repetition/categories/1
+GET http://localhost:8088/api/interval-repetition/categories/-1
+X-Telegram-User-Id: 4342423432
 
 ### Категория не найдена - 404 Not Found
 GET http://localhost:8088/api/interval-repetition/categories/100

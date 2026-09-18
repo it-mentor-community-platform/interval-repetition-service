@@ -6,6 +6,7 @@ import com.itmentorcommunityplatform.intervalrepetitionservice.dto.CategoryWithQ
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.NextQuestionResponseDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.service.CategoryService;
 import com.itmentorcommunityplatform.intervalrepetitionservice.service.QuestionService;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,10 @@ public class CategoriesController {
 
     @GetMapping("/{categoryId}/next-question")
     @GetNextQuestionFromCertainCategoryDocs
-    public ResponseEntity<NextQuestionResponseDto> getNextQuestionFromCertainCategory(@RequestHeader("X-Telegram-User-Id") Long userId, @PathVariable Long categoryId) {
+    public ResponseEntity<NextQuestionResponseDto> getNextQuestionFromCertainCategory(@RequestHeader("X-Telegram-User-Id") Long userId,
+                                                                                      @PathVariable
+                                                                                      @Positive(message = "Category ID must be positive")
+                                                                                      Long categoryId) {
 
         Optional<NextQuestionResponseDto> nextQuestion = questionService.getNextQuestionFromCertainCategory(userId, categoryId);
 
@@ -36,7 +40,10 @@ public class CategoriesController {
 
     @GetMapping("/{categoryId}")
     @GetCategoryWithQuestionsDocs
-    public ResponseEntity<CategoryWithQuestionsResponseDto> getCategoryWithQuestions(@RequestHeader("X-Telegram-User-Id") Long userId, @PathVariable Long categoryId){
+    public ResponseEntity<CategoryWithQuestionsResponseDto> getCategoryWithQuestions(@RequestHeader("X-Telegram-User-Id") Long userId,
+                                                                                     @PathVariable
+                                                                                     @Positive(message = "Category ID must be positive")
+                                                                                     Long categoryId){
 
         return ResponseEntity.ok(categoryService.getCategoryWithQuestions(userId, categoryId));
 

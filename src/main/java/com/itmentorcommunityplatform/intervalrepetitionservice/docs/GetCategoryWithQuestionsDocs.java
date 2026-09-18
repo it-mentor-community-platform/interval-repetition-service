@@ -116,7 +116,7 @@ import java.lang.annotation.Target;
                                         name = "Invalid category ID",
                                         value = """
                                                 {
-                                                  "message": "Invalid category ID"
+                                                  "message": "Category ID must be positive"
                                                 }
                                                 """
                                 )

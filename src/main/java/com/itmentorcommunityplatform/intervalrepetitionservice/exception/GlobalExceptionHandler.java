@@ -1,6 +1,7 @@
 package com.itmentorcommunityplatform.intervalrepetitionservice.exception;
 
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.ErrorDto;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 
 @RestControllerAdvice
@@ -29,6 +31,22 @@ public class GlobalExceptionHandler {
                 .stream()
                 .findFirst()
                 .map(ObjectError::getDefaultMessage)
+                .orElse("Validation failed");
+
+        return ResponseEntity
+                .badRequest()
+                .body(new ErrorDto(message));
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<ErrorDto> handleMethodValidation(
+            HandlerMethodValidationException e
+    ) {
+        String message = e.getParameterValidationResults()
+                .stream()
+                .flatMap(result -> result.getResolvableErrors().stream())
+                .findFirst()
+                .map(MessageSourceResolvable::getDefaultMessage)
                 .orElse("Validation failed");
 
         return ResponseEntity

@@ -10,6 +10,7 @@ import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SelectedCateg
 import com.itmentorcommunityplatform.intervalrepetitionservice.service.CategoryService;
 import com.itmentorcommunityplatform.intervalrepetitionservice.service.QuestionService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -55,7 +56,10 @@ public class SelectedCategoriesController{
 
     @DeleteMapping("/{categoryId}")
     @DeleteSelectedCategoryDocs
-    public ResponseEntity<Void> deleteSelectedCategory(@RequestHeader("X-Telegram-User-Id") Long userId, @PathVariable Long categoryId) {
+    public ResponseEntity<Void> deleteSelectedCategory(@RequestHeader("X-Telegram-User-Id") Long userId,
+                                                       @PathVariable
+                                                       @Positive(message = "Category ID must be positive")
+                                                       Long categoryId) {
 
         categoryService.deleteSelectedCategory(userId, categoryId);
 
