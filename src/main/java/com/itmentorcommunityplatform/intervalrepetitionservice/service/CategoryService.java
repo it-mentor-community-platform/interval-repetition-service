@@ -1,6 +1,7 @@
 package com.itmentorcommunityplatform.intervalrepetitionservice.service;
 
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.CategoryResponseDto;
+import com.itmentorcommunityplatform.intervalrepetitionservice.dto.CategoryWithQuestionsResponseDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SavedSelectedCategoryResponseDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.SelectedCategoryResponseDto;
 import com.itmentorcommunityplatform.intervalrepetitionservice.entity.CategoryWithSpecializationName;
@@ -11,6 +12,7 @@ import com.itmentorcommunityplatform.intervalrepetitionservice.mapper.CategoryMa
 import com.itmentorcommunityplatform.intervalrepetitionservice.mapper.SelectedCategoryMapper;
 import com.itmentorcommunityplatform.intervalrepetitionservice.projection.CategoryWithStatistics;
 import com.itmentorcommunityplatform.intervalrepetitionservice.repository.CategoryRepository;
+import com.itmentorcommunityplatform.intervalrepetitionservice.repository.QuestionRepository;
 import com.itmentorcommunityplatform.intervalrepetitionservice.repository.UserCategorySelectionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,6 +29,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final UserCategorySelectionRepository selectionRepository;
+    private final QuestionRepository questionRepository;
 
     private final CategoryMapper categoryMapper;
     private final SelectedCategoryMapper selectedCategoryMapper;
@@ -37,6 +40,14 @@ public class CategoryService {
         List<CategoryWithStatistics> categories = categoryRepository.findCategoriesWithStatisticBySpecializationId(specializationId, userId);
 
         return categoryMapper.toResponseList(categories);
+
+    }
+
+    public CategoryWithQuestionsResponseDto getCategoryWithQuestions(Long userId, Long categoryId) {
+
+        CategoryWithStatistics category = categoryRepository.findCategoryWithStatisticsById(categoryId, userId).orElseThrow(() -> new ResourceNotFoundException("Category with id " + categoryId + " not found!"));
+
+        return categoryMapper.toCategoryWithQuestionsResponse(category, questionRepository.findAllByCategoryId(categoryId));
 
     }
 
