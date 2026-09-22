@@ -1,0 +1,12 @@
+spring:
+  config:
+    activate:
+      on-profile: staging
+
+  datasource:
+    url: ${POSTGRES_URL}
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
+
+server:
+  port: 8088
