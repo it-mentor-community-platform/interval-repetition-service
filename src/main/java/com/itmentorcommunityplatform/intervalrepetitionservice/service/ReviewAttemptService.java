@@ -42,6 +42,21 @@ public class ReviewAttemptService {
 
     }
 
+    /**
+     * Recalculates the user's question schedule after a review attempt.
+     *
+     * <p>The number of successful repetitions is increased when the answer
+     * quality is at least 3. For lower quality values, the successful
+     * repetition counter is reset to zero.</p>
+     *
+     * <p>The ease factor is recalculated according to the SM-2 algorithm,
+     * and the next repetition interval is calculated using the previous
+     * ease factor.</p>
+     *
+     * @param oldSchedule previous schedule of the question
+     * @param quality answer quality, from 0 to 5
+     * @return recalculated schedule for the next repetition
+     */
     private UserQuestionSchedule recalculateUserQuestionSchedule(UserQuestionSchedule oldSchedule, int quality) {
 
 
@@ -77,11 +92,47 @@ public class ReviewAttemptService {
                 .build();
     }
 
+    /**
+     * Calculates the new ease factor according to the SM-2 algorithm.
+     *
+     * <p>The ease factor is adjusted based on the quality of the answer
+     * using the SM-2 formula. The resulting value cannot be lower than
+     * the minimum ease factor of 1.3.</p>
+     *
+     * <p>The formula is:</p>
+     *
+     * <pre>
+     * EF' = EF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
+     * </pre>
+     *
+     * <p>where {@code EF} is the current ease factor and {@code q} is
+     * the answer quality from 0 to 5.</p>
+     *
+     * @param ef current ease factor
+     * @param quality answer quality, from 0 to 5
+     * @return recalculated ease factor, with a minimum value of 1.3
+     */
     private double calculateEasyFactor(double ef, int quality) {
         ef = ef + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
         return Math.max(ef, 1.3);
     }
 
+
+    /**
+     * Calculates the repetition interval according to the SM-2 algorithm.
+     *
+     * <p>For the first two successful repetitions, fixed intervals of
+     * 1 and 6 days are used. For subsequent repetitions, the previous
+     * interval is multiplied by the current ease factor and rounded
+     * to the nearest whole number.</p>
+     *
+     * <p>The ease factor passed to this method is the ease factor from
+     * the previous schedule state.</p>
+     *
+     * @param repetitionsCount number of successful repetitions
+     * @param ef ease factor used to calculate the interval
+     * @return repetition interval in days
+     */
     private int calculateInterval(int repetitionsCount, double ef) {
         return switch (repetitionsCount) {
             case 0, 1 -> 1;
