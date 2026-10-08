@@ -20,16 +20,16 @@ public interface CategoryRepository extends ListCrudRepository<Category, Long> {
                     s.name AS specialization_name,
                     ucs.category_id IS NOT NULL AS selected,
                     count(q.id) AS all_questions,
-                    count(q.id) AS new_questions,
+                    count(q.id) FILTER (WHERE uqs.question_id IS NULL) AS new_questions,
                     count(q.id) FILTER (WHERE uqs.next_review_at <= EXTRACT(EPOCH FROM now())) AS questions_ready_to_repeat
                 FROM categories c
-                LEFT JOIN interval_repetition_service.user_category_selections ucs
+                LEFT JOIN user_category_selections ucs
                     ON c.id = ucs.category_id
                         AND ucs.user_id = :userId
-                JOIN interval_repetition_service.questions q
+                JOIN questions q
                     ON c.id = q.category_id
                         AND q.enabled = true
-                LEFT JOIN interval_repetition_service.user_question_schedules uqs
+                LEFT JOIN user_question_schedules uqs
                     ON q.id = uqs.question_id
                         AND uqs.user_id = :userId
                 JOIN specializations s ON c.specialization_id = s.id
@@ -49,13 +49,13 @@ public interface CategoryRepository extends ListCrudRepository<Category, Long> {
                     count(q.id) FILTER (WHERE uqs.question_id IS NULL) AS new_questions,
                     count(q.id) FILTER (WHERE uqs.next_review_at <= EXTRACT(EPOCH FROM now())) AS questions_ready_to_repeat
                 FROM categories c
-                LEFT JOIN interval_repetition_service.user_category_selections ucs
+                LEFT JOIN user_category_selections ucs
                     ON c.id = ucs.category_id
                         AND ucs.user_id = :userId
-                JOIN interval_repetition_service.questions q
+                JOIN questions q
                     ON c.id = q.category_id
                         AND q.enabled = true
-                LEFT JOIN interval_repetition_service.user_question_schedules uqs
+                LEFT JOIN user_question_schedules uqs
                     ON q.id = uqs.question_id
                         AND uqs.user_id = :userId
                 JOIN specializations s ON c.specialization_id = s.id
@@ -72,16 +72,16 @@ public interface CategoryRepository extends ListCrudRepository<Category, Long> {
                     s.name AS specialization_name,
                     ucs.category_id IS NOT NULL AS selected,
                     count(q.id) AS all_questions,
-                    count(q.id) AS new_questions,
+                    count(q.id) FILTER (WHERE uqs.question_id IS NULL) AS new_questions,
                     count(q.id) FILTER (WHERE uqs.next_review_at <= EXTRACT(EPOCH FROM now())) AS questions_ready_to_repeat
                 FROM categories c
-                LEFT JOIN interval_repetition_service.user_category_selections ucs
+                LEFT JOIN user_category_selections ucs
                     ON c.id = ucs.category_id
                         AND ucs.user_id = :userId
-                JOIN interval_repetition_service.questions q
+                JOIN questions q
                     ON c.id = q.category_id
                         AND q.enabled = true
-                LEFT JOIN interval_repetition_service.user_question_schedules uqs
+                LEFT JOIN user_question_schedules uqs
                     ON q.id = uqs.question_id
                         AND uqs.user_id = :userId
                 JOIN specializations s ON c.specialization_id = s.id
