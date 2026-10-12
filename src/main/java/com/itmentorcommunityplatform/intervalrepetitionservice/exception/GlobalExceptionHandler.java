@@ -1,6 +1,7 @@
 package com.itmentorcommunityplatform.intervalrepetitionservice.exception;
 
 import com.itmentorcommunityplatform.intervalrepetitionservice.dto.ErrorDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
-
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -81,9 +82,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDto> handleUnknown(Exception e) {
+        log.error("Unexpected error occurred", e);
+
         return ResponseEntity
                 .internalServerError()
-                .body(new ErrorDto(e.getMessage()));
+                .body(new ErrorDto("Internal server error"));
     }
 
 }
